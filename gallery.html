@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Transit Shadows: Gallery</title>
+  <style>
+    @font-face {
+      font-family: 'NeueMachina';
+      src: url('NeueMachina-Regular.otf') format('opentype');
+    }
+
+    :root {
+      --primary: #00ffff;
+      --bg: #0b0c10;
+      --text: #c5c6c7;
+      --highlight: rgba(0, 255, 255, 0.2);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'NeueMachina', sans-serif;
+      padding: 2rem;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .logo {
+      font-size: 3rem;
+      letter-spacing: 0.2rem;
+      color: var(--primary);
+      text-shadow: 0 0 10px var(--primary);
+    }
+
+    .subtitle {
+      font-size: 1.1rem;
+      color: rgba(255, 255, 255, 0.6);
+      margin-top: 0.5rem;
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+    }
+
+    .photo-card {
+      position: relative;
+      overflow: hidden;
+      border-radius: 15px;
+      border: 1px solid var(--primary);
+      box-shadow: 0 0 20px rgba(0,255,255,0.1);
+      transition: transform 0.3s, box-shadow 0.3s;
+      background: rgba(255, 255, 255, 0.02);
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .photo-card.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .photo-card:hover {
+      transform: scale(1.03);
+      box-shadow: 0 0 30px rgba(0,255,255,0.3);
+      cursor: pointer;
+    }
+
+    .photo-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      filter: brightness(0.9) contrast(1.1);
+      transition: transform 0.4s ease;
+    }
+
+    .photo-card:hover img {
+      transform: scale(1.1);
+    }
+
+    .caption {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+      color: var(--primary);
+      padding: 1rem;
+      font-size: 1rem;
+      font-weight: bold;
+      text-shadow: 0 0 10px rgba(0,255,255,0.4);
+    }
+
+    .back-button {
+      display: inline-block;
+      margin-top: 3rem;
+      padding: 0.8rem 2rem;
+      border: 1px solid var(--primary);
+      border-radius: 30px;
+      color: var(--primary);
+      text-decoration: none;
+      text-align: center;
+      transition: all 0.3s;
+    }
+
+    .back-button:hover {
+      background: var(--primary);
+      color: #000;
+      box-shadow: 0 0 20px rgba(0,255,255,0.5);
+    }
+
+    /* Cursor trail */
+    .cursor-trail {
+        width: 6px;
+        height: 6px;
+        background: rgba(0, 255, 255, 0.6);
+        border-radius: 50%;
+        position: fixed;
+        pointer-events: none;
+        z-index: 9999;
+        box-shadow: 0 0 12px rgba(0, 255, 255, 0.9);
+        transform: translate(-50%, -50%);
+        animation: fadeOut 0.8s forwards;
+    }
+    @keyframes fadeOut {
+      from { opacity: 1; transform: scale(1); }
+      to { opacity: 0; transform: scale(2); }
+    }
+
+    /* Lightbox / Modal */
+    .lightbox {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+      z-index: 10000;
+    }
+
+    .lightbox.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .lightbox img {
+      max-width: 90%;
+      max-height: 85%;
+      border: 2px solid var(--primary);
+      border-radius: 12px;
+      box-shadow: 0 0 40px rgba(0,255,255,0.5);
+      animation: zoomIn 0.4s ease;
+    }
+
+    @keyframes zoomIn {
+      from { transform: scale(0.8); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .lightbox:after {
+      content: "✕";
+      position: absolute;
+      top: 20px; right: 30px;
+      font-size: 2rem;
+      color: var(--primary);
+      cursor: pointer;
+      text-shadow: 0 0 10px var(--primary);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">Visual Transit Gallery</div>
+    <div class="subtitle">Glimpses from the digital shadows — places I've passed, paused, and powered through.</div>
+  </header>
+
+  <section class="gallery">
+    <div class="photo-card">
+      <img src="images/IMG_5070.jpeg" alt="Shinjuku Station">
+      <div class="caption">Shinjuku • JR Yamanote</div>
+    </div>
+    <div class="photo-card">
+      <img src="images/_DSC2606.jpeg" alt="Ikebukuro Station">
+      <div class="caption">Ikebukuro • Vending Purchase</div>
+    </div>
+    <div class="photo-card">
+      <img src="images/IMG_5080.jpeg" alt="Kamakura Station">
+      <div class="caption">Kamakura • JR Yokosuka</div>
+    </div>
+    <div class="photo-card">
+      <img src="images/IMG_5004.jpeg" alt="Asakusa Station">
+      <div class="caption">Asakusa • Tokyo Metro Ginza</div>
+    </div>
+    <div class="photo-card">
+      <img src="images/IMG_4824.jpeg" alt="Odaiba">
+      <div class="caption">Odaiba • Yurikamome Line</div>
+    </div>
+    <div class="photo-card">
+      <img src="images/IMG_5067.jpeg" alt="Shibuya">
+      <div class="caption">Shibuya • Keio Bus</div>
+    </div>
+    <div class="photo-card">
+      <img src="images/_DSC1917.jpeg" alt="Kofu">
+      <div class="caption">Kofu • Kiosk Purchase</div>
+    </div>
+    <div class="photo-card">
+      <img src="images/IMG_5018.jpeg" alt="Azabudai">
+      <div class="caption">Azabudai • Hibiya Line</div>
+    </div>
+  </section>
+
+  <div style="text-align: center;">
+    <a href="experience.html" class="back-button">← Back to Experience</a>
+  </div>
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox"></div>
+
+  <script>
+    // Cursor trail effect
+    document.addEventListener("mousemove", e => {
+      const trail = document.createElement("div");
+      trail.className = "cursor-trail";
+      document.body.appendChild(trail);
+      trail.style.left = e.pageX + "px";
+      trail.style.top = e.pageY + "px";
+      setTimeout(() => trail.remove(), 800);
+    });
+
+    // Scroll reveal
+    const cards = document.querySelectorAll(".photo-card");
+    const revealOnScroll = () => {
+      const triggerBottom = window.innerHeight * 0.85;
+      cards.forEach(card => {
+        const boxTop = card.getBoundingClientRect().top;
+        if (boxTop < triggerBottom) {
+          card.classList.add("visible");
+        }
+      });
+    };
+    window.addEventListener("scroll", revealOnScroll);
+    window.addEventListener("load", revealOnScroll);
+
+    // Lightbox modal
+    const lightbox = document.getElementById("lightbox");
+    const imgs = document.querySelectorAll(".photo-card img");
+
+    imgs.forEach(img => {
+      img.addEventListener("click", () => {
+        lightbox.classList.add("active");
+        lightbox.innerHTML = `<img src="${img.src}" alt="${img.alt}">`;
+      });
+    });
+
+    lightbox.addEventListener("click", e => {
+      if (e.target !== e.currentTarget) return;
+      lightbox.classList.remove("active");
+      lightbox.innerHTML = "";
+    });
+  </script>
+</body>
+</html>
